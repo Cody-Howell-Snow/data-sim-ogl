@@ -1,0 +1,22 @@
+#root {
+  width: 100%;
+  padding: 3%;
+  text-align: center;
+}
+
+h2 {
+  user-select: none;
+  cursor: pointer;
+}
+
+#displayValues {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.displayBox {
+  border: 1px solid white;
+  border-radius: 5px;
+  height: 300px;
+  overflow: auto;
+}
