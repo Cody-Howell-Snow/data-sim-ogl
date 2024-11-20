@@ -63,24 +63,25 @@ class App extends React.Component<{}, { sim: Simulator, numberOfDays: number, st
     let boughtFeatures: React.ReactNode[] = [];
     let games: React.ReactNode[] = [];
 
+    let options = {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'}
     if (this.state.sql) {
       this.state.sim.developers.forEach((value, index) => developers.push(<p key={index}>insert into developers (developer_name, contact_email, revenue_share_percentage) values
         ('{value.developerName}', '{value.contactEmail}', {value.revenueSharePercentage});</p>));
 
       this.state.sim.accounts.forEach((value, index) => accounts.push(<p key={index}>insert into accounts (user_name, subscriptionId, subscription_start_date, actual_cost, yearly_payment, end_date) values
-        ('{value.userName}', {value.subscriptionId !== undefined ? value.subscriptionId : "'null'"}, {value.susbscriptionDate?.toDateString()}, {value.actualCost}, {value.yearlyPayment ? "TRUE" : "FALSE"}, {value.endDate?.toDateString()});</p>));
+        ('{value.userName}', {value.subscriptionId !== undefined ? value.subscriptionId : "'null'"}, {value.susbscriptionDate?.toLocaleDateString('en-US', options)}, {value.actualCost}, {value.yearlyPayment ? "TRUE" : "FALSE"}, {value.endDate?.toLocaleDateString('en-US', options)});</p>));
 
       this.state.sim.subscriptionPayments.forEach((value, index) => subPayments.push(<p key={index}>insert into payment_subscriptions (account_id, subscription_id, payment_amount, payment_date) values
-        ({value.accountId}, {value.subscriptionId}, {value.paymentAmount}, '{value.paymentDate.toDateString()}');</p>));
+        ({value.accountId}, {value.subscriptionId}, {value.paymentAmount}, '{value.paymentDate.toLocaleDateString('en-US', options)}');</p>));
 
       this.state.sim.featurePayments.forEach((value, index) => featurePayments.push(<p key={index}>insert into payment_features (account_id, feature_id, payment_amount, payment_date, auto_renew) values
-        ({value.accountId}, {value.featureId}, {value.paymentAmount}, '{value.paymentDate.toDateString()}', {value.autoRenew ? "TRUE" : "FALSE"});</p>))
+        ({value.accountId}, {value.featureId}, {value.paymentAmount}, '{value.paymentDate.toLocaleDateString('en-US', options)}', {value.autoRenew ? "TRUE" : "FALSE"});</p>))
 
       this.state.sim.accounts.forEach((value, index) => {
         for (let i = 0; i < value.featuresPurchased.length; i++) {
           boughtFeatures.push(<p key={index + " " + i}>insert into feature_account (account_id, feature_id, first_payment_date, auto_renew, actual_cost, yearly_payment, end_date) values
-            ({value.id}, {value.featuresPurchased[i].pack.id}, {value.featuresPurchased[i].firstPurchase.paymentDate.toDateString()},
-            {value.featuresPurchased[i].firstPurchase.autoRenew}, {value.featuresPurchased[i].firstPurchase.yearly ? "TRUE" : "FALSE"}, {value.featuresPurchased[i].firstPurchase.endDate.toDateString()});</p>)
+            ({value.id}, {value.featuresPurchased[i].pack.id}, {value.featuresPurchased[i].firstPurchase.paymentDate.toLocaleDateString('en-US', options)},
+            {value.featuresPurchased[i].firstPurchase.autoRenew}, {value.featuresPurchased[i].firstPurchase.yearly ? "TRUE" : "FALSE"}, {value.featuresPurchased[i].firstPurchase.endDate.toLocaleDateString('en-US', options)});</p>)
         }
       });
       this.state.sim.games.forEach((value, index) => {
@@ -94,13 +95,13 @@ class App extends React.Component<{}, { sim: Simulator, numberOfDays: number, st
       this.state.sim.developers.forEach((value, index) => developers.push(<p key={index}>Id: {value.id} | Name: {value.developerName}</p>));
 
       this.state.sim.accounts.forEach((value, index) => accounts.push(<p key={index}>Id: {value.id} | Name: {value.userName} |
-        Subscription Day: {value.susbscriptionDate?.toDateString()} | End Date: {value.endDate?.toDateString()} | Expected Games: {value.expectedGames}</p>));
+        Subscription Day: {value.susbscriptionDate?.toLocaleDateString('en-US', options)} | End Date: {value.endDate?.toLocaleDateString('en-US', options)} | Expected Games: {value.expectedGames}</p>));
 
       this.state.sim.subscriptionPayments.forEach((value, index) => subPayments.push(<p key={index}>Sub Id: {value.subscriptionId} | Account Id: {value.accountId} |
-        Payment Date: {value.paymentDate.toDateString()} | Payment Amount: {value.paymentAmount}</p>));
+        Payment Date: {value.paymentDate.toLocaleDateString('en-US', options)} | Payment Amount: {value.paymentAmount}</p>));
 
       this.state.sim.featurePayments.forEach((value, index) => featurePayments.push(<p key={index}>Sub Id: {value.featureId} | Account Id: {value.accountId} |
-        Payment Date: {value.paymentDate.toDateString()} | Payment Amount: {value.paymentAmount}</p>))
+        Payment Date: {value.paymentDate.toLocaleDateString('en-US', options)} | Payment Amount: {value.paymentAmount}</p>))
 
       this.state.sim.accounts.forEach((value, index) => {
         for (let i = 0; i < value.featuresPurchased.length; i++) {
@@ -131,7 +132,7 @@ class App extends React.Component<{}, { sim: Simulator, numberOfDays: number, st
         <h1>Simulator</h1>
         <label htmlFor='sql'>SQL/CSV</label>
         <input type='checkbox' name='sql' id='sql' onChange={this.toggleSQL} value={this.state.sql ? "true" : "false"} />
-        <p>Date: {this.state.sim.currentDate.toDateString()}</p>
+        <p>Date: {this.state.sim.currentDate.toLocaleDateString('en-US', options)}</p>
         <button onClick={this.runSimDay}>Run Day(s)</button>
         <input type='number' value={this.state.numberOfDays} onChange={this.updateDays} placeholder='Number of days per run' />
         <input type='number' value={this.state.stopAfterValue} onChange={this.updateLargestValue} placeholder='Stop value of Game Plays' />
