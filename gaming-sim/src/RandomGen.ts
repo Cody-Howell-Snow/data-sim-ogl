@@ -113,6 +113,11 @@ export class RandomGen {
       currentDay.getMonth(),
       currentDay.getDay()
     );
+    let aMonthFromNow = new Date(
+      currentDay.getFullYear(),
+      currentDay.getMonth() + 1,
+      currentDay.getDay()
+    );
     return {
       id: id,
       userName: this.randName(),
@@ -120,9 +125,9 @@ export class RandomGen {
       susbscriptionDate: new Date(currentDay),
       actualCost: cost,
       yearlyPayment: yearly,
-      endDate: aYearFromNow,
+      endDate: yearly ? aYearFromNow : aMonthFromNow,
       expectedGames: this.randNumberBetween(1, 10),
-      featuresPurchased: [],
+      featuresPurchased: []
     };
   }
 

@@ -10,6 +10,7 @@ export class Simulator {
   gamePlays: Array<GamePlay>;
   subscriptionPayments: Array<SubPayment>;
   featurePayments: Array<FeaturePayment>;
+  loginHistory: Array<LoginHistory>; // TYPE NEEDS TO BE ADJUSTED
 
   constructor(startDate: Date) {
     this.currentDate = startDate;
@@ -19,6 +20,7 @@ export class Simulator {
     this.gamePlays = [];
     this.subscriptionPayments = [];
     this.featurePayments = [];
+    this.loginHistory = [];
   }
 
   public runDate(expectedNumber: number): void {
@@ -39,6 +41,31 @@ export class Simulator {
     // if (this.accounts.length < 1) { // Used to check 1 account
       let newAccount: Account = RandomGen.randAccount(this.currentDate, this.accounts.length);
       this.accounts.push(newAccount);
+
+      let failedAttempts = RandomGen.normalDistribution(0.01) * (Math.random() < 0.8 ? 0 : 1); // Randomly quiets it to 0.
+      for (let j = 0; j < failedAttempts; j++) {
+        let newLoginTime = new Date(this.currentDate);
+        newLoginTime.setHours(8);
+        newLoginTime.setMinutes(10 + i);
+        newLoginTime.setSeconds(0);
+
+        this.loginHistory.push({
+          accountId: newAccount.id, 
+          loginTime: newLoginTime, 
+          loginSuccess: false
+        });
+      }
+
+      let finalLoginTime = new Date(this.currentDate);
+      finalLoginTime.setHours(RandomGen.randNumberBetween(9, 12));
+      finalLoginTime.setMinutes(RandomGen.randNumberBetween(0, 60));
+      finalLoginTime.setSeconds(RandomGen.randNumberBetween(0, 60));
+
+      this.loginHistory.push({
+        accountId: newAccount.id,
+        loginTime: finalLoginTime,
+        loginSuccess: true,
+      });
 
       let currentSubscription = subscriptions[newAccount.subscriptionId!];
       let currentCost = newAccount.yearlyPayment ? currentSubscription.costYear : currentSubscription.costMonth;
@@ -73,10 +100,10 @@ export class Simulator {
 
       for (let j = 0; j < gameTimes.length; j += 2) {
         this.gamePlays.push({
-          gameId: playedGames[j / 2],
-          playerId: this.accounts[i].id,
-          startTime: gameTimes[j],
-          endTime: gameTimes[j + 1],
+          game_id: playedGames[j / 2],
+          account_id: this.accounts[i].id,
+          start_play_time: gameTimes[j],
+          end_play_time: gameTimes[j + 1],
         });
       }
     }

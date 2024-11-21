@@ -52,10 +52,10 @@ type Game = {
 }
 
 type GamePlay = {
-  gameId: number, 
-  playerId: number, 
-  startTime: Date, 
-  endTime: Date
+  game_id: number, 
+  account_id: number, 
+  start_play_time: Date, 
+  end_play_time: Date
 }
 
 type SubPayment = {
@@ -63,4 +63,10 @@ type SubPayment = {
   subscriptionId: number, 
   paymentAmount: number, 
   paymentDate: Date, 
+}
+
+type LoginHistory = {
+  accountId: number, 
+  loginTime: Date, 
+  loginSuccess: boolean
 }
